@@ -4,23 +4,34 @@ const pool = require("./db");
 
 app.use(express.json())
 
+// Get patients
+app.get("/patients", async(req,res) => {
+    try {
+        const allPatients = await pool.query("SELECT * FROM patients");
+        res.json(allPatients.rows);
+    } catch(err) {
+        console.log(err.message);
+    }
+})
 
-app.post("/todos", async(req,res) => {
-    
+// Post patients
+app.post("/patients", async(req,res) => {
     try {
         const { description } = req.body;
-        const newTodo = await pool.query(
-            "INSERT INTO todo (description) VALUES ($1) RETURNING *", 
-            [description]);
+        console.log(req.body);
+        console.log("-----------");
+        console.log(description);
+        // const newPatient = await pool.query(
+        //     "INSERT INTO patients (description) VALUES ($1) RETURNING *", 
+        //     [description]);
         
-        res.json(newTodo);
-        console.log(res);
+        // res.json(newPatient.rows[0]);
     } catch(err) {
-        console.log(err.body);
+        console.log(err.message);
     }
 })
 
 
-app.listen(5000, () => {
+app.listen(8080, () => {
     console.log("READY");
 });
